@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>AIMS Level Viewer</title>
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="stylesheet" href="viewer.css?v=20260531-223000">
+</head>
+<body>
+  <main class="app">
+    <aside class="panel">
+      <div class="panelHeader">
+        <div class="brandBlock">
+          <div class="titleBlock">
+            <h1>AIMS Level Viewer</h1>
+            <span id="buildVersion" class="versionText">v1.0.0</span>
+          </div>
+          <div class="githubMeta">
+            <a
+              class="githubLink"
+              href="https://github.com/DanielZenFlow/AIMS-Level-Viewer"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="AIMS Level Viewer on GitHub"
+            >
+              <svg class="githubMark" viewBox="0 0 16 16" aria-hidden="true">
+                <path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82A7.65 7.65 0 0 1 8 3.86c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z" />
+              </svg>
+              <span>By DanielZenFlow</span>
+            </a>
+          </div>
+        </div>
+        <button id="helpBtn" class="toolbarBtn" type="button" title="How to use" aria-label="How to use">?</button>
+      </div>
+
+      <div id="helpDialog" class="dialogOverlay" role="dialog" aria-modal="true" aria-labelledby="helpTitle" hidden>
+        <div class="dialogBox">
+          <h3 id="helpTitle">How to use</h3>
+          <div class="helpContent">
+            <div>
+              <strong>Reading Levels</strong>
+              <p>Read one .lvl file, drag one into the read zone, or add a directory to populate the level list.</p>
+            </div>
+            <div>
+              <strong>Browse A Directory</strong>
+              <p>Use Add directory to read every .lvl file in that folder and its subfolders. Click any level row to render it.</p>
+            </div>
+            <div>
+              <strong>Navigate The Board</strong>
+              <p>Drag the board to pan, use the mouse wheel to zoom, and press the reset control in the lower-right corner to recenter.</p>
+            </div>
+            <div>
+              <strong>Inspect Objects</strong>
+              <p>Hover cells for coordinates and contents. Track an object such as agent0 or boxA, or jump to a coordinate such as 28,3.</p>
+            </div>
+          </div>
+          <div class="dialogFooter">
+            <button id="helpCloseBtn" type="button">Close</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="fontSettingsDialog" class="dialogOverlay fontSettingsOverlay" role="dialog" aria-modal="true" aria-labelledby="fontSettingsTitle" hidden>
+        <div class="dialogBox fontSettingsDialog">
+          <p class="onboardingKicker">Display</p>
+          <h3 id="fontSettingsTitle">Text size</h3>
+
+          <section class="fontSettingsBody">
+            <label class="fontSettingRow">Interface font size (px)
+              <input id="uiFontSizeInput" type="number" min="9" max="24" step="1" value="12">
+            </label>
+            <label class="fontSettingRow">Detail font size (px)
+              <input id="logFontSizeInput" type="number" min="8" max="24" step="1" value="11">
+            </label>
+          </section>
+
+          <div class="dialogFooter">
+            <button id="fontSettingsResetBtn" type="button" class="secondaryDialogBtn">Reset</button>
+            <button id="fontSettingsCloseBtn" type="button">Close</button>
+          </div>
+        </div>
+      </div>
+
+      <label class="filePick">
+        <input id="fileInput" type="file" accept=".lvl,text/plain">
+        Read level LVL
+      </label>
+      <label class="filePick secondaryPick">
+        <input id="directoryInput" type="file" accept=".lvl,text/plain" webkitdirectory directory multiple>
+        Add directory
+      </label>
+      <div id="dropZone" class="dropZone">Read .lvl file here</div>
+
+      <div class="meta" id="meta"></div>
+
+      <section class="levelLibraryPanel">
+        <div class="sectionTitleRow">
+          <h2>Levels</h2>
+          <div class="levelTitleActions">
+            <button id="prevLevelBtn" class="miniButton levelNavBtn" type="button" title="Previous level" aria-label="Previous level">&uarr;</button>
+            <button id="nextLevelBtn" class="miniButton levelNavBtn" type="button" title="Next level" aria-label="Next level">&darr;</button>
+            <button id="clearLibraryBtn" class="miniButton" type="button">Clear</button>
+          </div>
+        </div>
+        <label class="searchLabel compactSearch">Filter levels
+          <input id="levelSearchInput" placeholder="name, folder, path">
+        </label>
+        <div id="libraryInfo" class="miniInfo">Add a directory to list .lvl files here.</div>
+        <div id="levelList" class="levelList"></div>
+      </section>
+
+      <label class="searchLabel">Track object
+        <input id="trackInput" placeholder="agent7 or boxG">
+      </label>
+      <div class="searchLabel">Highlight coordinate</div>
+      <div class="inputRow">
+        <input id="coordInput" placeholder="28,3">
+        <button id="coordGoBtn" type="button">Go</button>
+        <button id="coordClearBtn" type="button">Clear</button>
+      </div>
+
+      <section hidden>
+        <h2>Details</h2>
+        <div id="details" hidden></div>
+      </section>
+    </aside>
+
+    <section class="boardWrap">
+      <div class="toolbar">
+        <span id="hoverInfo">(row, col)</span>
+        <span id="levelTitle" class="levelTitle"></span>
+      </div>
+      <div id="boards" class="boards empty">
+        <div id="axisCorner" class="axisCorner"></div>
+        <div id="axisTop" class="axisTop"><div id="axisTopInner" class="axisInner"></div></div>
+        <div id="axisLeft" class="axisLeft"><div id="axisLeftInner" class="axisInner"></div></div>
+        <div id="panViewport" class="panViewport">
+          <div id="panSurface" class="panSurface"></div>
+        </div>
+        <div id="hoverTip" class="hoverTip"></div>
+      </div>
+      <div class="statusBar">
+        <span id="statusInfo" class="statusInfo"></span>
+        <span class="statusSpacer"></span>
+        <span id="zoomInfo" class="statusInfo">100%</span>
+        <button id="fontSettingsBtn" class="toolbarBtn fontSettingsBtn" type="button" title="Text size" aria-label="Text size">12px</button>
+        <button id="resetView" class="toolbarBtn" type="button" title="Reset view" aria-label="Reset view">&#8857;</button>
+      </div>
+    </section>
+
+    <div id="notificationToast" class="notificationToast" role="alert" hidden>
+      <div>
+        <strong id="notificationTitle">Something needs attention</strong>
+        <p id="notificationMessage"></p>
+      </div>
+      <button id="notificationCloseBtn" type="button" aria-label="Dismiss message">x</button>
+    </div>
+  </main>
+  <script src="levels-manifest.js"></script>
+  <script src="viewer.js?v=20260531-223000"></script>
+</body>
+</html>
