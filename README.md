@@ -1,14 +1,15 @@
 # AIMS Level Viewer
 
-AIMS Level Viewer is a small standalone browser tool for inspecting MAvis
-Hospital `.lvl` files.
+AIMS Level Viewer is a standalone browser viewer for MAvis Hospital `.lvl`
+level files.
 
 Current release: `v1.0.0`.
 
-It opens directly in a browser and renders the level map, agents, boxes, walls,
-goals, colors, and basic level details. It is intentionally simpler than AIMS
-Replay Viewer: there is no replay playback or recorder, only level browsing and
-inspection.
+## Overview
+
+The viewer renders Hospital levels as an interactive board and shows the level's
+walls, goals, agents, boxes, object colors, dimensions, and source metadata. It
+runs entirely in the browser and can be opened from the local filesystem.
 
 ## Quick Start
 
@@ -18,31 +19,39 @@ Open:
 index.html
 ```
 
-The bundled `levels-manifest.js` contains the levels included at release time,
-so the viewer shows a level immediately after opening. You can also load your
-own files with:
+The release includes a generated `levels-manifest.js`, so bundled levels are
+listed immediately after the page opens.
 
-- `Read level LVL` for a single `.lvl` file;
-- `Add directory` for every `.lvl` file in a folder;
-- drag-and-drop for one or more `.lvl` files.
+## Loading Levels
 
-## Viewer Features
+The viewer supports three loading methods:
 
-- browse levels grouped by folder;
-- filter by level name, folder, or path;
-- switch quickly with the up/down level buttons;
-- remove a level from the current list after confirmation;
-- pan and zoom the board;
-- track an object such as `agent0` or `boxA`;
-- highlight a coordinate such as `28,3`;
-- inspect level dimensions, goals, walls, agents, boxes, and color assignments.
+- `Read level LVL`: load one `.lvl` file.
+- `Add directory`: load all `.lvl` files from a selected directory.
+- Drag and drop: drop one or more `.lvl` files into the drop zone.
 
-Removing a level from the list does not delete the `.lvl` file from disk.
+Loaded levels are grouped by source folder. The filter field matches level
+names, source folders, and paths.
 
-## Updating the Bundled Level List
+## Features
 
-The generated manifest can be rebuilt from a MAvis project that has `levels/`,
-`complevels/`, or `complevels26/` folders:
+- Render `.lvl` maps with walls, goals, agents, boxes, and colors.
+- Pan and zoom the board.
+- Browse levels by source folder.
+- Move to the previous or next level with the arrow buttons.
+- Remove levels from the current browser list after confirmation.
+- Track an object such as `agent0` or `boxA`.
+- Highlight a coordinate such as `28,3`.
+- Inspect level dimensions, goal counts, wall counts, objects, and color
+  assignments.
+
+Removing a level from the browser list does not delete the `.lvl` file from
+disk.
+
+## Updating Bundled Levels
+
+Regenerate `levels-manifest.js` from a project that contains `levels/`,
+`complevels/`, or `complevels26/`:
 
 ```cmd
 python generate_manifest.py --root C:\path\to\mavis-project --out levels-manifest.js
